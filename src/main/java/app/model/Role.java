@@ -1,6 +1,7 @@
 package app.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Role implements GrantedAuthority {
     private String role;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return role;
     }
@@ -43,8 +45,7 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role1 = (Role) o;
-        return id == role1.id &&
-                Objects.equals(role, role1.role);
+        return  Objects.equals(role, role1.role);
     }
 
     @Override

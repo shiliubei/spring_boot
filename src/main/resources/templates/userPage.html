@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Bootstrap Example</title>
     <meta charset="utf-8">
@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
     <link rel="stylesheet" href="/css/main.css" type="text/css">
     <link rel="stylesheet" href="main.css" type="text/css">
 </head>
@@ -31,10 +30,10 @@
 <div class="container-fluid">
 
     <div class="row content">
-        <div class="col-sm-2 sidenav">
+        <div class="col-sm-2 sidenav" >
             <ul class="nav nav-pills nav-stacked">
-                <li><a href="/admin/userslist">Admin page</a></li>
-                <li class="active"><a href="/user">User page</a></li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin/userslist">Admin page</a></li>
+                  <li class="active"><a href="/user">User page</a></li>
             </ul>
             <br>
         </div>
