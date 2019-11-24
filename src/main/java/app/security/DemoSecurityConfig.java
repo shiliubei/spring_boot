@@ -1,5 +1,6 @@
 package app.security;
 
+import net.bytebuddy.build.EntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -24,80 +25,31 @@ import java.util.List;
 public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-//    private UserDetailsService userDetailsService;
-//    private AuthenticationSuccessHandler successHandler;
-//
-//    public DemoSecurityConfig(@Qualifier("myUserDetailsService") UserDetailsService userDetailsService, AuthenticationSuccessHandler successHandler) {
-//        this.userDetailsService = userDetailsService;
-//        this.successHandler = successHandler;
-//    }
-//
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("admin").password(passwordEncoder().encode("admin"))
-                .authorities("ROLE_ADMIN");
+                .withUser("admin").password("{noop}admin").roles("ADMIN")
+                .and()
+                .withUser("user").password("{noop}user").roles("USER");
+
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-//
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/login")
-//                .anonymous()
-//                .antMatchers("/user")
-//                .hasRole("USER")
-//                .antMatchers("/admin/**")
-//                //.permitAll()
-//                .authenticated()
-//                //.hasRole("ADMIN")
-//                .and()
-//                .formLogin()
-//                .loginPage("/login") //custom login page
-//                .loginProcessingUrl("/authenticateTheUser") //Login form should POST data this URL for processing (check user id and password)
-//                .successHandler(successHandler)
-//        ;
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .anyRequest().permitAll()
-               // .and()
-               // .httpBasic()
+                .antMatchers("/admin/**")
+                .hasAuthority("ADMIN")
+                .anyRequest()
+//                .permitAll()
+                .authenticated()
+//                .hasRole("ADMIN")
+               // .permitAll()
+                .and()
+                .httpBasic()
         ;
-    }
-
-
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        List<UserDetails> users = new ArrayList<>();
-
-        // admin
-        UserDetails admin = User
-                .withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin")
-                .roles("ADMIN")
-                .build();
-        users.add(admin);
-
-        return new InMemoryUserDetailsManager(users);
     }
 
 }

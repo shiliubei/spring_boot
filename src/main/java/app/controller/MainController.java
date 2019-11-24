@@ -7,9 +7,12 @@ import app.service.RoleService;
 import app.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,6 +44,12 @@ public class MainController {
         User user = userService.getUser(id);
         return ResponseEntity.ok().body(user);
     }
+    @GetMapping("/rest/userbyname/{name}")
+    public UserDetails getUserByName(@PathVariable("name") String name) {
+        UserDetails user = userService.getUserByName(name);
+        return user;
+    }
+
 
     @PostMapping(value = "/rest/adduser", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

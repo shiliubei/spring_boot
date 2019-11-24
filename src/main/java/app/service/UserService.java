@@ -14,6 +14,8 @@ public interface UserService {
 
     User getUser(Integer id);
 
+    User getUserByName(String name);
+
     void updateUser(User user);
 
 }
